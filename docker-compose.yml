@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # MySQL (DB)
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: taskTonic
+      MYSQL_DATABASE: todo
+      MYSQL_USER: taskTonic
+      MYSQL_PASSWORD: taskTonic
+    ports:
+      - "3306:3306"
+
+  # MailHog
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "8025:8025"  
+      - "1025:1025"  
+
+  nodejs:
+    build: .
+    restart: always
+    ports:
+      - "4000:4000"
+    volumes:
+      - ".:/app"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: taskTonic
+      MYSQL_PASSWORD: taskTonic
+      MYSQL_DATABASE: todo
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1    
