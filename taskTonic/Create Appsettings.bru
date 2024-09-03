@@ -1,0 +1,18 @@
+meta {
+  name: Create Appsettings
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:4000/api/v1/appSettings
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name" : "baseUrl",
+    "value" : "http://localhost:4000/v1"
+  }
+}

@@ -14,6 +14,25 @@ class AppSettings {
             throw error
         }
     }
+
+    createAppSettings = async (data) => {
+        try {
+            const result = await this.orm.create(tableName, data)
+            if (result[0].affectedRows === 1) {
+                return {
+                    code: 200,
+                    message: 'AppSetting created successfully'
+                }
+            } else {
+                return {
+                    code: 500,
+                    message: 'Processing failed due to technical fault'
+                }
+            }
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 module.exports = new AppSettings()
