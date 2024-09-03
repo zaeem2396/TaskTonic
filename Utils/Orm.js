@@ -4,7 +4,7 @@ class Orm {
 
     read = async (tableName) => {
         try {
-            const sql = `SELECT * FROM ${tableName}`
+            const sql = `SELECT * FROM ${tableName} ORDER BY id DESC`
             const [rows] = await pool.query(sql)
             return rows
         } catch (error) {

@@ -1,36 +1,42 @@
 const Orm = require('../Utils/Orm')
+const Response = require('../Utils/Response')
 const tableName = 'appSettings'
 
 class AppSettings {
     constructor() {
         this.orm = Orm
-    }
-    getAppSettings = async () => {
-        try {
-            const settings = await this.orm.read(`${tableName}`)
-            return settings
-        } catch (error) {
-            console.error(`Error creating record, error: ${error}`);
-            throw error
-        }
+        this.response = Response
     }
 
     createAppSettings = async (data) => {
         try {
+            const isAppSettingExits = await this.orm.find('appSettings', { name: data.name })
+            if (isAppSettingExits.length > 0) {
+                return this.response.duplicateResponse('AppSetting already exists', 409)
+            }
             const result = await this.orm.create(tableName, data)
             if (result[0].affectedRows === 1) {
-                return {
-                    code: 200,
-                    message: 'AppSetting created successfully'
-                }
+                return this.response.successResponse('AppSetting created successfully', 200)
             } else {
-                return {
-                    code: 500,
-                    message: 'Processing failed due to technical fault'
-                }
+                return this.response.errorResponse('Failed to create appSetting', 500)
             }
         } catch (error) {
-            throw error
+            console.error(`Error creating record, error: ${error}`);
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
+
+    getAppSettings = async () => {
+        try {
+            const settingsData = await this.orm.read(`${tableName}`)
+            const appSettings = settingsData.reduce((acc, setting) => {
+                acc[setting.name] = setting.value
+                return acc
+            }, {})
+            return this.response.successResponse(200, 'success', appSettings)
+        } catch (error) {
+            console.error(`Error creating record, error: ${error}`);
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
         }
     }
 }
