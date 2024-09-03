@@ -13,10 +13,14 @@ class Orm {
         }
     }
 
-    find = async (tableName, id) => {
+    find = async (tableName, searchParams) => {
         try {
-            const sql = `SELECT * FROM ${tableName} WHERE id = ?`
-            const [rows] = await pool.query(sql, [id])
+            const columns = Object.keys(searchParams)
+            const values = Object.values(searchParams)
+            const whereClause = columns.map(column => `${column} = ?`).join(' AND ')
+
+            const sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`
+            const [rows] = await pool.query(sql, values)
             return rows
         } catch (error) {
             console.error(`Error in fetching records, error: ${error}`);
