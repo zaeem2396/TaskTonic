@@ -9,5 +9,8 @@ router.get('/appSettings', (req: Request, res: Response) => {
 router.post('/appSettings', (req: Request, res: Response) => {
     AppSettingsController.createSettings(req, res)
 })
+router.put('/appSettings', (req: Request, res: Response) => {
+    AppSettingsController.updateSettings(req, res)
+})
 
 export default router;

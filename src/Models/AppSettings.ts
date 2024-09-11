@@ -42,6 +42,24 @@ class AppSettings {
             return this.response.errorResponse('Processing failed due to technical fault', 500, error)
         }
     }
+
+    updateAppSettings = async (id: number, data: any) => {
+        try {            
+            const isAppSettingExits = await this.orm.findOne('appSettings', 'name', data.name)
+            if (!isAppSettingExits) {
+                return this.response.notFoundResponse('AppSetting not found', 404)
+            }
+            const result = await this.orm.update(tableName, id, data)
+            if (result.affectedRows === 1) {
+                return this.response.successResponse(200, 'AppSetting updated successfully', await this.orm.findOne('appSettings', 'id', id))
+            } else {
+                return this.response.errorResponse('Failed to update appSetting', 500, result)
+            }
+        } catch (error) {
+            console.error(`Error updating record, error: ${error}`);
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
 }
 
 export default AppSettings

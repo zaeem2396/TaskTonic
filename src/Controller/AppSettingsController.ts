@@ -1,10 +1,10 @@
-import {Request, Response} from 'express'
+import { Request, Response } from 'express'
 import AppSettings from '../Models/AppSettings'
 
 class AppSettingsController {
-  
+
   private appSettings: AppSettings
-  
+
   constructor() {
     this.appSettings = new AppSettings()
   }
@@ -25,6 +25,18 @@ class AppSettingsController {
       const data = { name: name, value: value }
       const isSettingCreated = await this.appSettings.createAppSettings(data)
       res.status(200).json(isSettingCreated)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: error })
+    }
+  }
+
+  updateSettings = async (req: Request, res: Response) => {
+    try {
+      const { id, name, value } = req.body      
+      const data = { name: name, value: value }
+      const isSettingUpdated = await this.appSettings.updateAppSettings(id, data)
+      res.status(200).json(isSettingUpdated)
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: error })
