@@ -21,6 +21,13 @@ class Response {
             message: message ?? 'Duplicate data found'
         }
     }
+
+    notFoundResponse = (message: string, code: number) => {
+        return {
+            code: code,
+            message: message ?? 'Data not found'
+        }
+    }
 }
 
 export default Response
