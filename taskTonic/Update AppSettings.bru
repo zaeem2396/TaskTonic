@@ -1,0 +1,19 @@
+meta {
+  name: Update AppSettings
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:4000/api/v1/appSettings
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id" : "1",
+    "name" : "baseUrl",
+    "value" : "http://localhost:4000/api"
+  }
+}
