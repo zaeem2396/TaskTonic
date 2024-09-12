@@ -44,7 +44,7 @@ class AppSettings {
     }
 
     updateAppSettings = async (id: number, data: any) => {
-        try {            
+        try {
             const isAppSettingExits = await this.orm.findOne('appSettings', 'name', data.name)
             if (!isAppSettingExits) {
                 return this.response.notFoundResponse('AppSetting not found', 404)
@@ -57,6 +57,24 @@ class AppSettings {
             }
         } catch (error) {
             console.error(`Error updating record, error: ${error}`);
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
+
+    deleteAppSettings = async (id: number) => {
+        try {
+            const isAppSettingExits = this.orm.findOne('appSettings', 'id', id)
+            if (!isAppSettingExits) {
+                return this.response.notFoundResponse('AppSetting not found', 404)
+            }
+            const result = await this.orm.delete(tableName, id)
+            if (result.affectedRows === 1) {
+                return this.response.successResponse(200, 'AppSetting deleted successfully', result)
+            } else {
+                return this.response.errorResponse('Failed to delete appSetting', 500, result)
+            }
+        } catch (error: any) {
+            console.error(`Error deleting record, error: ${error}`);
             return this.response.errorResponse('Processing failed due to technical fault', 500, error)
         }
     }

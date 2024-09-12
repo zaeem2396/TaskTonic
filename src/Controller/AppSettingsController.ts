@@ -12,10 +12,10 @@ class AppSettingsController {
   getSettings = async (_req: Request, res: Response) => {
     try {
       const settings = await this.appSettings.getAppSettings()
-      res.status(200).json(settings)
+      return res.status(200).json(settings)
     } catch (error) {
       console.log(error)
-      res.status(500).json({ message: error })
+      return res.status(500).json({ message: error })
     }
   }
 
@@ -24,24 +24,35 @@ class AppSettingsController {
       const { name, value } = req.body
       const data = { name: name, value: value }
       const isSettingCreated = await this.appSettings.createAppSettings(data)
-      res.status(200).json(isSettingCreated)
+      return res.status(200).json(isSettingCreated)
     } catch (error) {
       console.log(error)
-      res.status(500).json({ message: error })
+      return res.status(500).json({ message: error })
     }
   }
 
   updateSettings = async (req: Request, res: Response) => {
     try {
-      const { id, name, value } = req.body      
+      const { id, name, value } = req.body
       const data = { name: name, value: value }
       const isSettingUpdated = await this.appSettings.updateAppSettings(id, data)
-      res.status(200).json(isSettingUpdated)
+      return res.status(200).json(isSettingUpdated)
     } catch (error) {
       console.log(error)
-      res.status(500).json({ message: error })
+      return res.status(500).json({ message: error })
+    }
+  }
+
+  deleteSettings = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.body
+      const isSettingDeleted = await this.appSettings.deleteAppSettings(id)
+      return res.status(200).json(isSettingDeleted)
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({ message: error })
     }
   }
 }
 
-export default new AppSettingsController()
+export default AppSettingsController

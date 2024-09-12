@@ -2,15 +2,19 @@ import express, { Request, Response, Router } from 'express';
 import AppSettingsController from '../Controller/AppSettingsController'
 
 const router: Router = express.Router();
+const appSettingsController = new AppSettingsController()
 
 router.get('/appSettings', (req: Request, res: Response) => {
-    AppSettingsController.getSettings(req, res)
+    appSettingsController.getSettings(req, res)
 })
 router.post('/appSettings', (req: Request, res: Response) => {
-    AppSettingsController.createSettings(req, res)
+    appSettingsController.createSettings(req, res)
 })
 router.put('/appSettings', (req: Request, res: Response) => {
-    AppSettingsController.updateSettings(req, res)
+    appSettingsController.updateSettings(req, res)
+})
+router.delete('/appSettings', (req: Request, res: Response) => {
+    appSettingsController.deleteSettings(req, res)
 })
 
 export default router;
