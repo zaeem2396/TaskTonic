@@ -1,10 +1,12 @@
 import express, {Request, Response} from 'express'
+import appSettingsRoute from './Route/AppSettingsRoute'
+import SeedRoute from './Route/SeedRoute'
+
 const app = express()
 app.use(express.json());
 
-import appSettingsRoute from './Route/AppSettingsRoute'
 app.use('/api/v1', appSettingsRoute)
-
+app.use('/api/v1', SeedRoute)
 
 const port: number = 4000
 
