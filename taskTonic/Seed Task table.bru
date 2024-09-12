@@ -6,6 +6,12 @@ meta {
 
 post {
   url: http://localhost:4000/api/v1/seedData
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "count" : "50"
+  }
 }
