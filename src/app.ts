@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express'
-import appSettingsRoute from './Route/AppSettingsRoute'
-import SeedRoute from './Route/SeedRoute'
+import appSettingsRoute from './Routes/AppSettingsRoute'
+import SeedRoute from './Routes/SeedRoute'
 
 const app = express()
 app.use(express.json());
