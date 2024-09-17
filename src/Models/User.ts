@@ -39,7 +39,6 @@ class User {
     loginUser = async (data: any) => {
         try {
             const isUserExists = await this.orm.find('users', { email: data.email })
-            const JWT_SECRET = 'yCtkmo9elWtY5c+1Nq9mxJ1aw3aG2gNOOCFt4IqEFCgmUgi6vsBESqXL8WcdSSJ/vEhDzp5//H74w5RCodVk2Giibijlgdxsa+no4CjmVEY0CI956awTNOWNt6F9aqTc74hJLcc9tdppErkldLzh/8jUZ2MBAHVMCH2I9AVuPPi0G3w3Ji4FTYDY4SBvA4AQbd98EHxtt5ztuBamF+Z/v89abbB1COd6VpjVVpE/9O/vk5lrP4YDTcy2BbwuwGERgp9HhYcaFMY9Iv2o/7JAvdXbNSLC4owxu0DkM9Qxj/AQOAWUsfYdmTIzMN555vJBIE+5QkGbpGWjQLTAysTEjw=='
             if (isUserExists.length === 0) {
                 return this.response.notFoundResponse('User not found or Invalid credentials', 404)
             }
@@ -48,7 +47,7 @@ class User {
                 delete user.password
                 delete user.created_at
                 delete user.updated_at
-                const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' })
+                const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY as string, { expiresIn: '1h' })
                 const response = {
                     user: user,
                     token: token

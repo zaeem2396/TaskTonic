@@ -1,8 +1,10 @@
 import express, {Request, Response} from 'express'
+import dotenv from 'dotenv'
 import appSettingsRoute from './Routes/AppSettingsRoute'
 import userRoute from './Routes/UserRoute'
 import SeedRoute from './Routes/SeedRoute'
 
+dotenv.config()
 const app = express()
 app.use(express.json());
 
