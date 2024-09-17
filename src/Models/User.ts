@@ -2,14 +2,17 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import Orm from '../Utils/Orm';
 import Response from '../Utils/Response';
+import Lib from '../Utils/Lib';
 
 class User {
 
     private orm: Orm
+    private lib: Lib
     private response: Response
 
     constructor() {
         this.orm = new Orm()
+        this.lib = new Lib()
         this.response = new Response()
     }
 
@@ -58,6 +61,41 @@ class User {
             }
         } catch (error) {
             console.log(`Error logging in user: ${error}`)
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
+
+    getProfile = async (data: any) => {
+        try {
+            const isUserExist = await this.lib.verifyToken(data.token) as any
+            if (!isUserExist) {
+                return this.response.notFoundResponse('User not found', 404)
+            }
+            const getProfile = await this.orm.findOne('users', 'id', isUserExist.id)
+            return this.response.successResponse(200, 'User profile', getProfile)
+        } catch (error) {
+            console.log(`Error getting user profile: ${error}`)
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
+
+    updateProfile = async (data: any) => {
+        try {
+            const isUserExist = await this.lib.verifyToken(data.token) as any
+            if (!isUserExist) {
+                return this.response.notFoundResponse('User not found', 404)
+            }
+            const { token, ...updatedData } = data;
+            const updateProfile = await this.orm.update('users', isUserExist.id, updatedData)
+            if (updateProfile.affectedRows === 0) {
+                return this.response.errorResponse('Failed to update user', 500, updateProfile)
+            }
+            
+            const getUpdatedUser = await this.orm.findOne('users', 'id', isUserExist.id)
+            delete getUpdatedUser.password
+            return this.response.successResponse(200, 'User updated successfully', getUpdatedUser)
+        } catch (error) {
+            console.log(`Error updating user profile: ${error}`)
             return this.response.errorResponse('Processing failed due to technical fault', 500, error)
         }
     }

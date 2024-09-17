@@ -1,4 +1,13 @@
+import Response from "./Response";
+import jwt from 'jsonwebtoken'
 class Lib {
+
+    private response: Response
+
+    constructor() {
+        this.response = new Response()
+    }
+
     formatDate = (date: Date): string => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');  // Month is 0-indexed
@@ -8,6 +17,15 @@ class Lib {
         const seconds = String(date.getSeconds()).padStart(2, '0');
 
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    verifyToken = async (token: string) => {
+        try {
+            const decoded = jwt.verify(token, process.env.SECRET_KEY as string)
+            return decoded
+        } catch (error) {
+            return this.response.errorResponse('Failed to verify token', 500, error)
+        }
     }
 
 }

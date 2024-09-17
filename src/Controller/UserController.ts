@@ -30,6 +30,29 @@ class UserController {
             return res.status(500).json({ message: error })
         }
     }
+
+    get = async (req: Request, res: Response) => {
+        try {
+            const token = req.headers.authorization?.split(' ')[1] || ''
+            const data = { token: token }
+            const isProfileFetched = await this.user.getProfile(data)
+            return res.status(200).json(isProfileFetched)
+        } catch (error) {
+            return res.status(500).json({ message: error })
+        }
+    }
+
+    update = async (req: Request, res: Response) => {
+        try {
+            const token = req.headers.authorization?.split(' ')[1] || ''
+            const { name, email } = req.body
+            const data = { token: token, name: name, email: email }
+            const isUserProfleUpdated = await this.user.updateProfile(data)
+            return res.status(200).json(isUserProfleUpdated)
+        } catch (error) {
+            return res.status(500).json({ message: error })
+        }
+    }
 }
 
 export default UserController

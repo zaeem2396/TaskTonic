@@ -1,0 +1,22 @@
+meta {
+  name: Update user profile
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:4000/api/v1/update
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzI2NTkxMDgxLCJleHAiOjE3MjY1OTQ2ODF9.0L5pI1EqzscM7C36szW3rfT5RIjKUg5htRmiwoW8fAA
+}
+
+body:json {
+  {
+    "name" : "zaeem ansari",
+    "email" : "zaeem@taskTonic.com"
+  }
+}
