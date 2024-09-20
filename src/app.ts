@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import appSettingsRoute from './Routes/AppSettingsRoute'
 import userRoute from './Routes/UserRoute'
 import SeedRoute from './Routes/SeedRoute'
+import GeminiRoute from './Routes/GeminiRoute'
 
 dotenv.config()
 const app = express()
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use('/api/v1', appSettingsRoute)
 app.use('/api/v1', userRoute)
 app.use('/api/v1', SeedRoute)
+app.use('/api/v1', GeminiRoute)
 
 const port: number = 4000
 
