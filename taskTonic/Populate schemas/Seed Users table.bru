@@ -1,0 +1,17 @@
+meta {
+  name: Seed Users table
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:4000/api/v1/seedUsers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "count" : "10"
+  }
+}
