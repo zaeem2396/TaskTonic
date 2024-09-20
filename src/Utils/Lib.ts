@@ -1,5 +1,9 @@
 import Response from "./Response";
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
+
+interface CustomJWTPayload extends JwtPayload {
+    id: number
+}
 class Lib {
 
     private response: Response
@@ -19,7 +23,7 @@ class Lib {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
-    verifyToken = async (token: string) => {
+    verifyToken = async (token: string): Promise<CustomJWTPayload | any> => {
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY as string)
             return decoded

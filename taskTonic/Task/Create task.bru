@@ -1,0 +1,26 @@
+meta {
+  name: Create task
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:4000/api/v1/create
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzI2ODU2MDg5LCJleHAiOjE3MjY4NTk2ODl9.VbulpyHARCFd32-HNafWY1mB_ZLKb185E91L90VP9Sw
+}
+
+body:json {
+  {
+    "title" : "Test task",
+    "description" : "test description",
+    "assignee" : "5",
+    "assignedTo" : "",
+    "priority" : "low",
+    "due_date" : "2024-12-1"
+  }
+}
