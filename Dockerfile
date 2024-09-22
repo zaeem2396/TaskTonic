@@ -1,16 +1,18 @@
 # Use the official Node.js 20 image
 FROM node:20
 
+VOLUME 
+
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY . .
 
 # Install app dependencies
 RUN npm install
 
-RUN ./node_modules/.bin/tsc -p ./tsconfig.json
+RUN ./node_modules/.bin/tsc
 
 # Expose the port your app runs on
 EXPOSE 4000
