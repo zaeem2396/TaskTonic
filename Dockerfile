@@ -10,9 +10,7 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
-RUN npm install -g typescript
-
-RUN tsc
+RUN ./node_modules/.bin/tsc
 
 # Expose the port your app runs on
 EXPOSE 4000
