@@ -1,8 +1,6 @@
 # Use the official Node.js 20 image
 FROM node:20
 
-VOLUME 
-
 # Set the working directory in the container
 WORKDIR /app
 
