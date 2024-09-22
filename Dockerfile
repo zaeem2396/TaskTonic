@@ -10,7 +10,7 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
-RUN ./node_modules/.bin/tsc
+RUN ./node_modules/.bin/tsc -p ./tsconfig.json
 
 # Expose the port your app runs on
 EXPOSE 4000
