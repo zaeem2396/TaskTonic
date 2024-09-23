@@ -10,7 +10,7 @@ dotenv.config()
 const app = express()
 app.use(express.json());
 
-app.use('/api/v1', appSettingsRoute)
+app.use('/api/v1', appSettingsRoute) 
 app.use('/api/v1', userRoute)
 app.use('/api/v1', SeedRoute)
 app.use('/api/v1', GeminiRoute)

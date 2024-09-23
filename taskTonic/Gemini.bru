@@ -4,7 +4,7 @@ meta {
   seq: 1
 }
 
-get {
+post {
   url: http://localhost:4000/api/v1/gemini
   body: json
   auth: none
@@ -12,6 +12,6 @@ get {
 
 body:json {
   {
-    "message" : "create a join query between users and task table to fetch which task is assigned to which user, reference columns are from users table is id and tasks table is assignedTo"
+    "message" : "create a join query between users and task table"
   }
 }
