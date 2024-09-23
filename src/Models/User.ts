@@ -3,21 +3,51 @@ import bcrypt from 'bcryptjs'
 import Orm from '../Utils/Orm';
 import Response from '../Utils/Response';
 import Lib from '../Utils/Lib';
+import Validator from '../Utils/Validator';
 
 class User {
 
     private orm: Orm
     private lib: Lib
     private response: Response
+    private validator: Validator
 
     constructor() {
         this.orm = new Orm()
         this.lib = new Lib()
         this.response = new Response()
+        this.validator = new Validator()
     }
 
     registerUser = async (data: any) => {
         try {
+            let validationErrors: any = {};
+
+            if (!this.validator.isRequired(data.name)) {
+                validationErrors.name = 'Name is required';
+            } else if (!this.validator.isStringValid(data.name)) {
+                validationErrors.name = 'Invalid name or name contains unwanted characters';
+            }
+
+            if (!this.validator.isRequired(data.email)) {
+                validationErrors.email = 'Email is required';
+            } else if (!this.validator.isEmailValid(data.email)) {
+                validationErrors.email = 'Invalid email format';
+            }
+
+            if (!this.validator.isRequired(data.password)) {
+                validationErrors.password = 'Password cannot be blank';
+            }
+
+            if (!this.validator.isRequired(data.role)) {
+                validationErrors.role = 'Role is required';
+            } else if (!this.validator.doesRoleExist(data.role)) {
+                validationErrors.role = 'Invalid role';
+            }
+
+            if (Object.keys(validationErrors).length > 0) {
+                return this.response.errorResponse('Validation errors', 400, validationErrors);
+            }
             const isUserExists = await this.orm.find('users', { email: data.email })
             if (isUserExists.length > 0) {
                 return this.response.duplicateResponse('User already exists', 409)
@@ -90,7 +120,7 @@ class User {
             if (updateProfile.affectedRows === 0) {
                 return this.response.errorResponse('Failed to update user', 500, updateProfile)
             }
-            
+
             const getUpdatedUser = await this.orm.findOne('users', 'id', isUserExist.id)
             delete getUpdatedUser.password
             return this.response.successResponse(200, 'User updated successfully', getUpdatedUser)
