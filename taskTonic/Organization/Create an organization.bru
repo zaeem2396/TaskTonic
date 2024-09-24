@@ -6,6 +6,16 @@ meta {
 
 post {
   url: http://localhost:4000/api/v1/createCompany
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "orgName" : "Linect LLP",
+    "name" : "justin drake",
+    "email" : "justin@linect.com",
+    "password" : "justin@123",
+    "role" : "EMPR"
+  }
 }
