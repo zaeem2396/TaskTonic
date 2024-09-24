@@ -21,29 +21,24 @@ class User {
 
     registerUser = async (data: any) => {
         try {
-            let validationErrors: any = {};
+            let validationErrors: Record<string, string> = {};
 
-            if (!this.validator.isRequired(data.name)) {
-                validationErrors.name = 'Name is required';
-            } else if (!this.validator.isStringValid(data.name)) {
-                validationErrors.name = 'Invalid name or name contains unwanted characters';
-            }
+            const validateField = (field: string, validatorFn: Function, errorMsg: string) => {
+                if (!validatorFn(data[field])) {
+                    validationErrors[field] = errorMsg;
+                }
+            };
 
-            if (!this.validator.isRequired(data.email)) {
-                validationErrors.email = 'Email is required';
-            } else if (!this.validator.isEmailValid(data.email)) {
-                validationErrors.email = 'Invalid email format';
-            }
+            validateField('name', this.validator.isRequired, 'Name is required');
+            if (!validationErrors.name) validateField('name', this.validator.isStringValid, 'Name contains unwanted characters');
 
-            if (!this.validator.isRequired(data.password)) {
-                validationErrors.password = 'Password cannot be blank';
-            }
+            validateField('email', this.validator.isRequired, 'Email is required');
+            if (!validationErrors.email) validateField('email', this.validator.isEmailValid, 'Invalid email format');
 
-            if (!this.validator.isRequired(data.role)) {
-                validationErrors.role = 'Role is required';
-            } else if (!this.validator.doesRoleExist(data.role)) {
-                validationErrors.role = 'Invalid role';
-            }
+            validateField('password', this.validator.isRequired, 'Password cannot be blank');
+
+            validateField('role', this.validator.isRequired, 'Role is required');
+            if (!validationErrors.role) validateField('role', this.validator.doesRoleExist, 'Invalid role');
 
             if (Object.keys(validationErrors).length > 0) {
                 return this.response.errorResponse('Validation errors', 400, validationErrors);
@@ -77,6 +72,7 @@ class User {
             }
             const user = isUserExists[0]
             if (user && bcrypt.compareSync(data.password, user.password)) {
+                delete user.orgId
                 delete user.password
                 delete user.created_at
                 delete user.updated_at

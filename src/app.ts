@@ -5,6 +5,7 @@ import userRoute from './Routes/UserRoute'
 import SeedRoute from './Routes/SeedRoute'
 import GeminiRoute from './Routes/GeminiRoute'
 import TaskRoute from './Routes/TaskRoute'
+import CompanyRoutes from './Routes/CompanyRoutes'
 
 dotenv.config()
 const app = express()
@@ -15,6 +16,7 @@ app.use('/api/v1', userRoute)
 app.use('/api/v1', SeedRoute)
 app.use('/api/v1', GeminiRoute)
 app.use('/api/v1', TaskRoute)
+app.use('/api/v1', CompanyRoutes)
 
 const port: number = 4000
 

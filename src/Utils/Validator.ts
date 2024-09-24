@@ -5,7 +5,7 @@ class Validator {
     }
 
     isStringValid = (arg: string) => {
-        return arg.match('^[a-zA-Z]+$')
+        return arg.match('^[a-zA-Z ]+$')
     }
 
     isEmailValid = (arg: any) => {
