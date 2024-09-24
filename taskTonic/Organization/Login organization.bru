@@ -1,0 +1,18 @@
+meta {
+  name: Login organization
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:4000/api/v1/loginCompany
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email" : "justin@linect.com",
+    "password" : "justin@123"
+  }
+}

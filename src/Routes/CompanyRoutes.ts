@@ -8,5 +8,8 @@ const companyController = new CompanyController()
 router.post('/createCompany', (req: Request, res: Response) => {
     companyController.create(req, res)
 })
+router.post('/loginCompany', (req: Request, res: Response) => {
+    companyController.login(req, res)
+})
 
 export default router;

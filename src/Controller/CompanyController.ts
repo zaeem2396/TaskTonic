@@ -19,6 +19,17 @@ class CompanyController {
             return res.status(500).json({ message: error })
         }
     }
+
+    login = async (req: Request, res: Response) => {
+        try {
+            const { email, password } = req.body
+            const data = { email: email, password: password }
+            const isCompanyLoggedIn = await this.company.loginOrganization(data)
+            return res.status(200).json(isCompanyLoggedIn)
+        } catch (error) {
+            return res.status(500).json({ message: error })
+        }
+    }
 }
 
 export default CompanyController

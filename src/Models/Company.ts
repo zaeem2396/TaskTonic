@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken'
 import Orm from "../Utils/Orm";
 import Response from "../Utils/Response";
 import Validator from "../Utils/Validator";
@@ -63,6 +64,33 @@ class Company {
             return this.response.successResponse(201, 'Company created successfully', isCompanyCreated)
         } catch (error) {
             console.log(`Error creating company: ${error}`)
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
+
+    loginOrganization = async (data: any) => {
+        try {
+            const isOrganizationExists = await this.orm.find('org', { email: data.email })
+            if (!isOrganizationExists) {
+                return this.response.notFoundResponse('Organization not found or Invalid credentials', 404)
+            }
+
+            const organization = isOrganizationExists[0]
+            if (organization && bcrypt.compareSync(data.password, organization.password)) {
+                delete organization.password
+                delete organization.createdAt
+                delete organization.updatedAt
+                const token = jwt.sign({ id: organization.id }, process.env.SECRET_KEY as string, { expiresIn: '1h' })
+                const response = {
+                    organization: organization,
+                    token: token
+                }
+                return this.response.successResponse(200, 'Organization logged in successfully', response)
+            } else {
+                return this.response.notFoundResponse('Failed to login organization', 404)
+            }
+        } catch (error) {
+            console.log(`Error logging in user: ${error}`)
             return this.response.errorResponse('Processing failed due to technical fault', 500, error)
         }
     }
