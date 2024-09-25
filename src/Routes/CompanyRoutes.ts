@@ -13,5 +13,8 @@ router.post('/createCompany', (req: Request, res: Response) => {
 router.post('/loginCompany', (req: Request, res: Response) => {
     companyController.login(req, res)
 })
+router.get('/getEmp', (req: Request, res: Response) => {
+    companyController.fetchEmployee(req, res)
+})
 
 export default router;

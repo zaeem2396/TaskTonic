@@ -32,7 +32,7 @@ class Company {
             if (!this.validator.isAdmin(getRole.role)) {
                 return this.response.errorResponse('Unauthorized access', 401, {})
             }
-            
+
             let validationErrors: Record<string, string> = {};
 
             const validateField = (field: string, validatorFn: Function, errorMsg: string) => {
@@ -108,6 +108,32 @@ class Company {
             }
         } catch (error) {
             console.log(`Error logging in user: ${error}`)
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error)
+        }
+    }
+
+    getListOfEmp = async (data: any) => {
+        try {
+            if (!data.token) {
+                return this.response.errorResponse('Token is required', 400, {})
+            }
+
+            const isTokenValid = await this.lib.verifyToken(data.token)
+            const getRole = await this.orm.findOne('users', 'id', isTokenValid.id)
+            console.log(!this.validator.isAdmin(getRole.role), !this.validator.isEmpr(getRole.role));
+
+            if (!this.validator.isEmp(getRole.role)) {
+                return this.response.errorResponse('Unauthorized access', 401, {})
+            }
+            let fetchEmpData
+            if (getRole.orgId == '0') {
+                fetchEmpData = this.orm.read('users')
+            } else {
+                fetchEmpData = this.orm.find('users', { orgId: getRole.orgId })
+            }
+            return this.response.successResponse(200, 'Employee list fetched successfully', await fetchEmpData)
+        } catch (error) {
+            console.log(`Error fetching employee list: ${error}`);
             return this.response.errorResponse('Processing failed due to technical fault', 500, error)
         }
     }

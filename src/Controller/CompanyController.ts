@@ -31,6 +31,17 @@ class CompanyController {
             return res.status(500).json({ message: error })
         }
     }
+
+    fetchEmployee = async (req: Request, res: Response) => {
+        try {
+            const token = req.headers.authorization?.split(' ')[1] || ''
+            const data = { token: token }
+            const isEmployeeFetched = await this.company.getListOfEmp(data)
+            return res.status(200).json(isEmployeeFetched)
+        } catch (error) {
+            return res.status(500).json({ message: error })
+        }
+    }
 }
 
 export default CompanyController

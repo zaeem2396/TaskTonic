@@ -24,6 +24,10 @@ class Validator {
     isEmpr = (arg: string) => {
         return arg === 'EMPR' ? true : false
     }
+
+    isEmp = (arg: string) => {
+        return arg === 'EMP' ? true : false
+    }
 }
 
 export default Validator
