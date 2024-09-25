@@ -11,8 +11,8 @@ class UserController {
 
     create = async (req: Request, res: Response) => {
         try {
-            const { name, email, password, role } = req.body
-            const data = { name: name, email: email, password: password, role: role }
+            const { orgId, name, email, password, role } = req.body
+            const data = { orgId: orgId, name: name, email: email, password: password, role: role }
             const isUserCreated = await this.user.registerUser(data)
             return res.status(200).json(isUserCreated)
         } catch (error) {

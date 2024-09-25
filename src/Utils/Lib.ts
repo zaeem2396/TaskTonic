@@ -31,7 +31,6 @@ class Lib {
             return this.response.errorResponse('Failed to verify token', 500, error)
         }
     }
-
 }
 
 export default Lib

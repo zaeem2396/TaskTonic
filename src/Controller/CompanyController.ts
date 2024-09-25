@@ -11,8 +11,9 @@ class CompanyController {
 
     create = async (req: Request, res: Response) => {
         try {
+            const token = req.headers.authorization?.split(' ')[1] || ''
             const { orgName, name, email, password, role } = req.body
-            const data = { orgName: orgName, name: name, email: email, password: password, role: role }
+            const data = { token: token, orgName: orgName, name: name, email: email, password: password, role: role }
             const isCompanyRegistered = await this.company.registerCompany(data)
             return res.status(200).json(isCompanyRegistered)
         } catch (error) {

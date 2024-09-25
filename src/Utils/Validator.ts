@@ -16,6 +16,14 @@ class Validator {
         const roles = ['ADMIN', 'EMP', 'EMPR']
         return roles.includes(arg)
     }
+
+    isAdmin = (arg: string) => {
+        return arg === 'ADMIN' ? true : false
+    }
+
+    isEmpr = (arg: string) => {
+        return arg === 'EMPR' ? true : false
+    }
 }
 
 export default Validator

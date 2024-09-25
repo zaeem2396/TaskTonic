@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Orm from "../Utils/Orm";
+import Lib from "../Utils/Lib";
 import Response from "../Utils/Response";
 import Validator from "../Utils/Validator";
 import bcrypt from 'bcryptjs';
@@ -7,17 +8,31 @@ import bcrypt from 'bcryptjs';
 class Company {
 
     private orm: Orm
+    private lib: Lib
     private response: Response
     private validator: Validator
 
     constructor() {
         this.orm = new Orm()
+        this.lib = new Lib()
         this.response = new Response()
         this.validator = new Validator()
     }
 
     registerCompany = async (data: any) => {
         try {
+
+            if (!data.token) {
+                return this.response.errorResponse('Token is required', 400, {})
+            }
+
+            const isTokenValid = await this.lib.verifyToken(data.token)
+            const getRole = await this.orm.findOne('users', 'id', isTokenValid.id)
+
+            if (!this.validator.isAdmin(getRole.role)) {
+                return this.response.errorResponse('Unauthorized access', 401, {})
+            }
+            
             let validationErrors: Record<string, string> = {};
 
             const validateField = (field: string, validatorFn: Function, errorMsg: string) => {
@@ -46,7 +61,7 @@ class Company {
 
             const isOrganizationExists = await this.orm.findOne('org', 'email', data.email)
             if (isOrganizationExists) {
-                return this.response.errorResponse('Email already exists', 409, isOrganizationExists)
+                return this.response.errorResponse('Organization with this email already exists', 409, {})
             }
 
             const isOrganizationRegistered = {
@@ -77,9 +92,11 @@ class Company {
 
             const organization = isOrganizationExists[0]
             if (organization && bcrypt.compareSync(data.password, organization.password)) {
+
                 delete organization.password
                 delete organization.createdAt
                 delete organization.updatedAt
+
                 const token = jwt.sign({ id: organization.id }, process.env.SECRET_KEY as string, { expiresIn: '1h' })
                 const response = {
                     organization: organization,

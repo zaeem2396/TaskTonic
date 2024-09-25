@@ -48,6 +48,7 @@ class User {
                 return this.response.duplicateResponse('User already exists', 409)
             }
             const registerUser = {
+                orgId: data.orgId,
                 name: data.name,
                 email: data.email,
                 password: bcrypt.hashSync(data.password, 10),
