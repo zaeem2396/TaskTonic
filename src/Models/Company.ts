@@ -130,6 +130,7 @@ class Company {
                 fetchEmpData = this.orm.read('users')
             } else {
                 fetchEmpData = this.orm.find('users', { orgId: getRole.orgId })
+                
             }
             return this.response.successResponse(200, 'Employee list fetched successfully', await fetchEmpData)
         } catch (error) {
