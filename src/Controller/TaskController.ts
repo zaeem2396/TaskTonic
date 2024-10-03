@@ -32,7 +32,8 @@ class TaskController {
                 limit = 10,
                 orderBy = 'id',
                 order = 'DESC',
-                priority
+                priority,
+                id
             } = req.query;
 
             const paginationData = {
@@ -40,7 +41,8 @@ class TaskController {
                 limit: parseInt(limit as string),
                 orderBy: orderBy as string,
                 order: order as string,
-                priority: priority as string || undefined
+                priority: priority as string || undefined,
+                id: parseInt(id as string)
             };
 
             const isTaskFetched = await this.task.getTask(paginationData);

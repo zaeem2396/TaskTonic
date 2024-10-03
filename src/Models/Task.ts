@@ -30,9 +30,9 @@ class Task {
         }
     }
 
-    getTask = async (data: { page: number, limit: number, orderBy?: string, order?: string, priority?: string }) => {
+    getTask = async (data: { page: number, limit: number, orderBy?: string, order?: string, priority?: string, id?: number }) => {
         try {
-            const { page, limit, orderBy = 'id', order = 'DESC', priority } = data;
+            const { page, limit, orderBy = 'id', order = 'DESC', priority, id } = data;
 
             const offset = (page - 1) * limit;
 
@@ -41,6 +41,10 @@ class Task {
             if (priority) {
                 whereClause = `WHERE t.priority = ?`;
                 queryParams.push(priority);
+            }
+            if (id) {
+                whereClause = `WHERE t.assignedTo = ?`;
+                queryParams.push(id);
             }
 
             const countSql = `
@@ -64,7 +68,7 @@ class Task {
                 LIMIT ? OFFSET ?
             `;
 
-            queryParams.push(limit, offset);  
+            queryParams.push(limit, offset);
 
             const [taskList] = await this.pool.query<RowDataPacket[]>(sql, queryParams);
 
@@ -84,6 +88,18 @@ class Task {
             return this.response.errorResponse('Processing failed due to technical fault', 500, error);
         }
     }
+
+    // Utility function to log SQL queries with values
+    logSqlQuery = (query: string, values: any[]) => {
+        return query.replace(/\?/g, () => {
+            let value = values.shift();
+            if (typeof value === 'string') {
+                value = `'${value}'`;  // Add quotes around strings
+            }
+            return value;
+        });
+    }
+
 }
 
 export default Task
