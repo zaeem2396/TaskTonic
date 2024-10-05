@@ -10,5 +10,8 @@ router.post('/createTask', (req: Request, res: Response) => {
 router.get('/getTask', (req: Request, res: Response) => {
     taskController.get(req, res)
 })
+router.put('/updateTask', (req: Request, res: Response) => {
+    taskController.update(req, res)
+})
 
 export default router

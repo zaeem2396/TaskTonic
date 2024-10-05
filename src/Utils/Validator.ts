@@ -17,6 +17,11 @@ class Validator {
         return roles.includes(arg)
     }
 
+    doesPriorityExist = (arg: string) => {
+        const priority = ['low', 'medium', 'high', 'critical']
+        return priority.includes(arg)
+    }
+
     isAdmin = (arg: string) => {
         return arg === 'ADMIN' ? true : false
     }

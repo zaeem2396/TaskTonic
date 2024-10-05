@@ -31,6 +31,17 @@ class Lib {
             return this.response.errorResponse('Failed to verify token', 500, error)
         }
     }
+
+    // Utility function to log SQL queries with values
+    logSqlQuery = (query: string, values: any[]) => {
+        return query.replace(/\?/g, () => {
+            let value = values.shift();
+            if (typeof value === 'string') {
+                value = `'${value}'`;  // Add quotes around strings
+            }
+            return value;
+        });
+    }
 }
 
 export default Lib

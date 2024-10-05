@@ -2,16 +2,19 @@ import { RowDataPacket } from "mysql2"
 import Orm from "../Utils/Orm"
 import Response from "../Utils/Response"
 import { pool } from "../config/db"
+import Validator from "../Utils/Validator"
 
 class Task {
     private orm: Orm
-    private response: Response
     private pool = pool
+    private response: Response
+    private validator: Validator
 
     constructor() {
+        this.pool = pool
         this.orm = new Orm()
         this.response = new Response()
-        this.pool = pool
+        this.validator = new Validator()
     }
 
     createTask = async (data: any) => {
@@ -30,17 +33,22 @@ class Task {
         }
     }
 
-    getTask = async (data: { page: number, limit: number, orderBy?: string, order?: string, priority?: string, id?: number }) => {
+    getTask = async (data: { page: number, limit: number, orderBy?: string, order?: string, priority?: string, status?: string, id?: number }) => {
         try {
-            const { page, limit, orderBy = 'id', order = 'DESC', priority, id } = data;
+            const { page, limit, orderBy = 'id', order = 'DESC', priority, status, id } = data;
 
             const offset = (page - 1) * limit;
 
             let whereClause = '';
             const queryParams: any[] = [];
+            
             if (priority) {
                 whereClause = `WHERE t.priority = ?`;
                 queryParams.push(priority);
+            }
+            if (status) {
+                whereClause = whereClause ? `${whereClause} AND t.status = ?` : `WHERE t.status = ?`;
+                queryParams.push(status);
             }
             if (id) {
                 whereClause = `WHERE t.assignedTo = ?`;
@@ -89,17 +97,44 @@ class Task {
         }
     }
 
-    // Utility function to log SQL queries with values
-    logSqlQuery = (query: string, values: any[]) => {
-        return query.replace(/\?/g, () => {
-            let value = values.shift();
-            if (typeof value === 'string') {
-                value = `'${value}'`;  // Add quotes around strings
-            }
-            return value;
-        });
-    }
+    updateTask = async (data: any) => {
+        try {
+            let validationErrors: Record<string, string> = {}
 
+            const validateField = (field: string, validatorFn: Function, errorMsg: string) => {
+                if (!validatorFn(data[field])) {
+                    validationErrors[field] = errorMsg
+                }
+            }
+
+            validateField('id', this.validator.isRequired, 'Task id is required')
+
+            validateField('priority', this.validator.doesPriorityExist, 'Invalid priority')
+            if (!validationErrors.priority) validateField('priority', this.validator.isStringValid, 'Priority contains unwanted characters')
+
+            if (Object.keys(validationErrors).length > 0) {
+                return this.response.errorResponse('Validation errors', 400, validationErrors);
+            }
+
+            const isTaskExists = await this.orm.find('task', { id: data.id })
+
+            if (isTaskExists.length === 0) {
+                return this.response.notFoundResponse('Task not found', 404)
+            }
+
+            const isTaskUpdated = await this.orm.update('task', data.id, data)
+
+            if (isTaskUpdated.affectedRows === 0) {
+                return this.response.errorResponse('Failed to update task', 500, isTaskUpdated)
+            } else {
+                const getUpdatedTask = await this.orm.findOne('task', 'id', data.id)
+                return this.response.successResponse(200, 'Task updated successfully', getUpdatedTask)
+            }
+        } catch (error) {
+            console.error(`Error updating task: ${error}`);
+            return this.response.errorResponse('Processing failed due to technical fault', 500, error);
+        }
+    }
 }
 
 export default Task
