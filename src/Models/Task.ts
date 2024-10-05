@@ -41,7 +41,7 @@ class Task {
 
             let whereClause = '';
             const queryParams: any[] = [];
-            
+
             if (priority) {
                 whereClause = `WHERE t.priority = ?`;
                 queryParams.push(priority);
@@ -127,7 +127,13 @@ class Task {
             if (isTaskUpdated.affectedRows === 0) {
                 return this.response.errorResponse('Failed to update task', 500, isTaskUpdated)
             } else {
-                const getUpdatedTask = await this.orm.findOne('task', 'id', data.id)
+                const sql = `SELECT t.id AS taskId, t.title, t.description, 
+                u.name AS reportor, uu.name AS assignedTo, 
+                t.priority, t.due_date, t.status
+                FROM task AS t
+                INNER JOIN users AS u ON t.assignee = u.id
+                INNER JOIN users AS uu ON t.assignedTo = uu.id WHERE t.id=?`
+                const [getUpdatedTask] = await await this.pool.query<RowDataPacket[]>(sql, data.id);
                 return this.response.successResponse(200, 'Task updated successfully', getUpdatedTask)
             }
         } catch (error) {
