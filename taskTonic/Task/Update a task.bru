@@ -10,14 +10,18 @@ put {
   auth: none
 }
 
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsImlhdCI6MTcyODE1MTMyNywiZXhwIjoxNzI4MTU0OTI3fQ.aeOhEDBGJ7J-t5dzRMTMh8xOba0aiKoEHfNn8xWnVaY
+}
+
 body:json {
   {
-    "id":"1000",
-    "title" : "Cetera appello summisse.",
+    "title" : "Appello summisse.",
     "description" : "Thorax statim quis reprehenderit compello. Cerno desolo sublime solum despecto patria verumtamen soleo. Defluo absorbeo aqua nisi censura.",
     "assignee" : "10",
     "assignedTo" : "1",
-    "priority" : "minor",
-    "due_date" : "2024-10-10"
+    "priority" : "low",
+    "due_date" : "2024-10-10",
+    "status" : "completed"
   }
 }

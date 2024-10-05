@@ -56,8 +56,9 @@ class TaskController {
 
     update = async (req: Request, res: Response) => {
         try {
-            const { id, title, description, assignee, assignedTo, priority, due_date, status } = req.body
-            const data = { id: id, title: title, description: description, assignee: assignee, assignedTo: assignedTo, priority: priority, due_date: due_date, status: status }
+            const getDecodedToken = await this.lib.verifyToken(req.headers.authorization?.split(' ')[1] as string)
+            const { title, description, assignee, assignedTo, priority, due_date, status } = req.body
+            const data = { id: getDecodedToken.id, title: title, description: description, assignee: assignee, assignedTo: assignedTo, priority: priority, due_date: due_date, status: status }
             const isTaskUpdated = await this.task.updateTask(data)
             return res.status(200).json(isTaskUpdated);
         } catch (error) {
