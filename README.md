@@ -1,4 +1,4 @@
-<p>A simple TODO app build using typescript, MySQL, Mailhog and Gemini AI to interact with DB</p>
+<p>A simple TODO REST API build using typescript, MySQL, Mailhog and Gemini AI to interact with DB</p>
 <b>Steps to run:</b>
 <li>Clone this repository using this link <code>https://github.com/zaeem2396/TaskTonic.git</code></li>
 <li>Run <code>npm i</code> to install dependencies</li>
